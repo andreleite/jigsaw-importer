@@ -2,9 +2,12 @@
   "name": "jigsaw-importer",
   "version": "1.0.0",
   "description": "Importer of Thoughtworks internal tool Jigsaw data to SQL database",
-  "main": "index.js",
+  "main": "cli.js",
   "scripts": {
     "test": "exit 0"
+  },
+  "bin": {
+    "jigsaw-importer": "./cli.js"
   },
   "engines": {
     "node": ">=8.9.4"

@@ -1,18 +1,4 @@
 const getPeople = require('../src/get-people')
-const headers = {
-  'cache-control': 'must-revalidate, private, max-age=0',
-  'content-type': 'application/json; charset=utf-8',
-  date: 'Fri, 05 Jan 2018 18:35:04 GMT',
-  etag: '"9062dcda26211fe7a7594060e6421150"',
-  link: '<https://jigsaw.thoughtworks.net/api/people?page=2>; rel="next",<https://jigsaw.thoughtworks.net/api/people?page=52>; rel="last"',
-  'x-rack-cache': 'miss',
-  'x-runtime': '0.214000',
-  'x-total-count': '5108',
-  'x-total-pages': '30',
-  'x-ua-compatible': 'IE=Edge,chrome=1',
-  'transfer-encoding': 'chunked',
-  connection: 'Close'
-}
 
 describe('getPeople', () => {
   beforeEach(() => {
@@ -22,11 +8,11 @@ describe('getPeople', () => {
       params: {page: 1},
       method: 'get',
       baseURL: process.env.JIGSAW_URL,
-      headers: {'Authorization': process.env.JIGSAW_API_SECRET}
+      peopleHeaders: {'Authorization': process.env.JIGSAW_API_SECRET}
     }
     mock
       .onGet('/people')
-      .reply((config) => [200, [person, person], headers])
+      .reply(() => [200, [person, person], peopleHeaders])
   })
 
   it('getTotalPages', async () => {

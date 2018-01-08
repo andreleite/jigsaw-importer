@@ -13,9 +13,7 @@ describe('insertPeople', () => {
   })
 
   it('insert all people', async () => {
-    const person2 = JSON.parse(JSON.stringify(person))
-    person2.employeeId++
-    await insertPeople.createTable()
+    await populateDB()
     const response = await insertPeople.insertPeople([person, person2])
     expect(response).to.exist
   })

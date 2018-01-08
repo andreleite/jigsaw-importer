@@ -5,7 +5,6 @@ const insertPeople = require('./src/insert-people')
 
 const process = async () => {
 
-
   console.log('getting total number of people\'s pages')
   const totalPeoplePages = await getPeople.getTotalPages()
   console.log('%s pages found', totalPeoplePages)

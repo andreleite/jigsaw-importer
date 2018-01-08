@@ -12,7 +12,7 @@ describe('insertPeople', () => {
     expect(response).to.exist
   })
 
-  it.only('insert all people', async () => {
+  it('insert all people', async () => {
     const person2 = JSON.parse(JSON.stringify(person))
     person2.employeeId++
     await insertPeople.createTable()

@@ -1,10 +1,7 @@
 const insertPeople = require('../src/insert-people')
 
 describe('insertPeople', () => {
-  it('create people table', async () => {
-    const response = await insertPeople.createTable()
-    expect(response).to.exist
-  })
+  it('prepares person to insert')
 
   it('insert one person', async () => {
     await insertPeople.createTable()

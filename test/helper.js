@@ -14,8 +14,6 @@ global.mock = new MockAdapter(axios);
 chai.use(sinonChai)
 process.env.DB = process.env.DB_TEST
 
-const insertPeople = require('../src/insert-people')
-const insertSkills = require('../src/insert-skills')
 global.populateDB = async () => {
   await insertPeople.createTable()
   await insertSkills.createTable()

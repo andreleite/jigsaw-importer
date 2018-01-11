@@ -2,7 +2,9 @@ require('dotenv').config()
 const url = require('url')
 const parsePG = require('pg-connection-string').parse
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
-const str = process.env[`DB_${process.env.NODE_ENV.toUpperCase()}`]
+const str = process.env.NODE_ENV.toUpperCase() === 'TEST'
+  ? process.env.DB_TEST
+  : process.env.DB
 
 module.exports = (() => {
   const parsed = url.parse(str)

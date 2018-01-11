@@ -4,6 +4,7 @@
   "description": "Importer of Thoughtworks internal tool Jigsaw data to SQL database",
   "main": "cli.js",
   "scripts": {
+    "start": "node -r dotenv/config cli.js",
     "test": "NODE_ENV=test mocha"
   },
   "bin": {

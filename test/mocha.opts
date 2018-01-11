@@ -1,2 +1,2 @@
 --recursive
---require test/helper
+--require test/mocha-init

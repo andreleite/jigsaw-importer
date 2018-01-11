@@ -22,10 +22,9 @@ const getPeoplePage = async (page) => {
   return people.data
 }
 
-const getAllPeople = async (totalPages) => {
-  const promises = Array(totalPages)
-    .fill()
-    .map((current, index) => getPeoplePage(++index))
+const getPeople = async (pages) => {
+  const promises = pages
+    .map((page) => getPeoplePage(page))
   const results = await Promise.all(promises)
   return results
     .reduce((accumulator, current) => accumulator.concat(current), [])
@@ -34,5 +33,5 @@ const getAllPeople = async (totalPages) => {
 module.exports = {
   getTotalPages,
   getPeoplePage,
-  getAllPeople
+  getPeople
 }

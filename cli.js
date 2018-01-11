@@ -1,42 +1,65 @@
 #!/usr/bin/env node
 require('dotenv').config()
-const databaseSchema = require('./src/database-schema')
+const knex = require('./src/knex-connection')
 const getPeople = require('./src/get-people')
 const insertPeople = require('./src/insert-people')
 const getSkills = require('./src/get-skills')
 const insertSkills = require('./src/insert-skills')
+const utils = require('./src/utils')
+let tries = 3
 
 const process = async () => {
-/*
-  console.log('deleting data')
-  await databaseSchema.truncatePeople()
-  await databaseSchema.truncateSkills()
+  console.log()
+  console.log('JIGSAW-IMPORTER')
+  console.log('===============')
 
-  console.log('getting total number of people\'s pages')
+  try {
+  console.log()
+  console.log('## Updating DB schema')
+  await knex.migrate.latest()
+
+  console.log()
+  console.log('## Deleting old data')
+  await knex('people').truncate()
+  await knex('skills').truncate()
+
+  console.log()
+  console.log('## Getting total number of people\'s pages')
   const totalPeoplePages = await getPeople.getTotalPages()
-  console.log('%s pages found', totalPeoplePages)
+  console.log('  - %s pages found', totalPeoplePages)
 
-  console.log('getting all people')
-  const people = await getPeople.getAllPeople(totalPeoplePages)
-  console.log('%s people found', people.length)
+  const pages = utils.makeSequentialArray(totalPeoplePages)
 
-  console.log('inserting people')
-  await insertPeople.insertPeople(people)
-  console.log('people inserted')
-*/
-  console.log('getting all people\'s ids')
+  console.log()
+  console.log('## Getting and inserting people')
+  await utils.runTasksInBatchesWithRetry(pages, async (pagesBatch) => {
+    const people = await getPeople.getPeople(pagesBatch)
+    await insertPeople.insertPeople(people)
+  })
+
+  console.log()
+  console.log('## Getting all people\'s ids')
   const ids = await getSkills.getAllIds()
-  console.log('%s ids found', ids.length)
+  console.log('  - %s people found', ids.length)
 
-  console.log('getting all people\'s skills')
-  const skills = await getSkills.getAllPeopleSkills(ids)
-  console.log(skills[2])
-  //console.log('%s ids found', ids.length)
-/*
-  console.log('inserting skills')
-  await insertSkills.insertPeopleSkills(ids)
-  console.log('skills inserted')
-*/
+  console.log()
+  console.log('## Getting and inserting skills')
+  await utils.runTasksInBatchesWithRetry(ids, async (idsBatch) => {
+    const skills = await getSkills.getSkills(idsBatch)
+    await insertSkills.insertSkills(skills)
+  })
+  } catch(e) {
+    if(tries) {
+      tries--
+      console.log('## Another try...')
+      process()
+    } else {
+      throw e
+    }
+  }
+  console.log()
+  console.log('## SUCCESS!')
+  console.log()
 }
 
 process()

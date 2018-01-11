@@ -28,15 +28,14 @@ const preparePersonToInsert = (person) => {
 }
 
 const insertPerson = async (person) => {
-  return knex('people')
+  return await knex('people')
     .insert(preparePersonToInsert(person))
 }
 
 const insertPeople = async (people) => {
   const promises = people
-    .map((current) => insertPerson(current))
-    const results = await Promise.all(promises)
-    return results
+    .map(insertPerson)
+    return await Promise.all(promises)
 }
 
 module.exports = {

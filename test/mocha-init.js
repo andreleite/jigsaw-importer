@@ -1,21 +1,20 @@
 require('dotenv').config()
 const axios = require('axios')
 const MockAdapter = require('axios-mock-adapter')
-const sinonChai = require('sinon-chai')
+global.mock = new MockAdapter(axios);
 global.chai = require('chai')
 global.sinon = require('sinon')
+const sinonChai = require('sinon-chai')
+chai.use(sinonChai)
 global.expect = require('chai').expect
-const { person, personSkills, peopleHeaders } = require('./fixtures')
+const {
+  person,
+  personSkillsFromJigsaw,
+  personSkillsProcessed,
+  peopleHeaders
+} = require('./fixtures')
 global.person = person
 global.person2 = { ...person, employeeId: person.employeeId++ }, 
-global.personSkills = personSkills 
+global.personSkillsFromJigsaw = personSkillsFromJigsaw
+global.personSkillsProcessed = personSkillsProcessed
 global.peopleHeaders = peopleHeaders
-global.mock = new MockAdapter(axios);
-chai.use(sinonChai)
-process.env.DB = process.env.DB_TEST
-
-global.populateDB = async () => {
-  await insertPeople.createTable()
-  await insertSkills.createTable()
-  await insertPeople.insertPeople([person, person2])
-}

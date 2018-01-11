@@ -25,8 +25,8 @@ describe('getPeople', () => {
     expect(peoplePage).to.deep.equal([person, person])
   })
 
-  it('getAllPeople', async function () {
-    const people = await getPeople.getAllPeople(2)
+  it('getPeople', async function () {
+    const people = await getPeople.getPeople([1, 2])
     expect(people).to.deep.equal([person, person, person, person])
   })
 })

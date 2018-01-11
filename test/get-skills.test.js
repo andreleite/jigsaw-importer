@@ -1,16 +1,7 @@
 const getSkills = require('../src/get-skills')
 
 describe('getSkills', () => {
-  before(async () => {
-    //await populateDB()
-  })
-
-  it('gets all people ids', async () => {
-    const ids = await getSkills.getAllIds()
-    expect(ids).to.have.all.members(['666', '667'])
-  })
-
-  it('gets person skills', async () => {
+  before(() => {
     const config = {
       method: 'get',
       baseURL: process.env.JIGSAW_URL,
@@ -18,14 +9,18 @@ describe('getSkills', () => {
     }
     mock
       .onGet('/people/666/skills')
-      .reply((config) => [200, personSkills])
-
-    const response = await getSkills.getPersonSkills('666')
-    expect(response).to.have.all.members(personSkills)
+      .reply((config) => [200, personSkillsFromJigsaw])
   })
 
-  it.only('gets a batch of people skills', async () => {
-    const response = await getSkills.getAllPeopleSkills(Array(5095).fill())
+  it('gets all people\'s ids')
+
+  it('gets person skills', async () => {
+    const response = await getSkills.getPersonSkills('666')
+    expect(response).to.deep.equal(personSkillsProcessed)
+  })
+
+  it('gets a batch of people skills', async () => {
+    const response = await getSkills.getSkills([666])
     expect(true).to.exist
   })
 })

@@ -24,7 +24,6 @@
   },
   "homepage": "https://github.com/andreleite/jigsaw-importer#readme",
   "dependencies": {
-    "async": "2.6.0",
     "axios": "0.17.1",
     "knex": "0.14.2",
     "pg-connection-string": "2.0.0",

@@ -6,4 +6,6 @@ describe('utils', () => {
   it('makes an array with sequential numbers')
 
   it('runs tasks in batches with retry')
+
+  it('checks if we have a environment variable with Jigsaw Api Token')
 })

@@ -11,7 +11,7 @@ const getPersonSkills = async (id) => {
   const response = await axios({
     url: `/people/${id}/skills`,
     method: 'get',
-    baseURL: process.env.JIGSAW_URL,
+    baseURL: 'https://jigsaw.thoughtworks.net/api',
     headers: {'Authorization': process.env.JIGSAW_API_SECRET}
   })
   return response

@@ -2,13 +2,13 @@
   "name": "jigsaw-importer",
   "version": "1.0.0",
   "description": "Importer of Thoughtworks internal tool Jigsaw data to SQL database",
-  "main": "cli.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node -r dotenv/config cli.js",
+    "start": "node -r dotenv/config index.js",
     "test": "NODE_ENV=test mocha"
   },
   "bin": {
-    "jigsaw-importer": "./cli.js"
+    "jigsaw-importer": "./index.js"
   },
   "engines": {
     "node": ">=8.9.4"

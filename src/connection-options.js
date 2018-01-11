@@ -3,8 +3,9 @@ const url = require('url')
 const parsePG = require('pg-connection-string').parse
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const str = process.env.NODE_ENV.toUpperCase() === 'TEST'
-  ? 'jigsaw-importer-test.sqlite'
-  : process.env.DB || 'jigsaw-importer.sqlite'
+  ? 'jigsaw-test.sqlite'
+  : process.env.DB || 'jigsaw.sqlite'
+
 
 module.exports = (() => {
   const parsed = url.parse(str)

@@ -5,7 +5,7 @@ const getTotalPages = async () => {
     url: '/people',
     params: {page: 1},
     method: 'get',
-    baseURL: process.env.JIGSAW_URL,
+    baseURL: 'https://jigsaw.thoughtworks.net/api',
     headers: {'Authorization': process.env.JIGSAW_API_SECRET}
   })
   return parseInt(people.headers['x-total-pages'], 10)
@@ -16,7 +16,7 @@ const getPeoplePage = async (page) => {
     url: '/people',
     params: {page},
     method: 'get',
-    baseURL: process.env.JIGSAW_URL,
+    baseURL: 'https://jigsaw.thoughtworks.net/api',
     headers: {'Authorization': process.env.JIGSAW_API_SECRET}
   })
   return people.data

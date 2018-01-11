@@ -1,4 +1,6 @@
-const CHUNK = parseInt(process.env.CHUNK, 10)
+const CHUNK = process.env.CHUNK
+  ? parseInt(process.env.CHUNK, 10)
+  : 100
 let tries
 
 const makeChunks = (array) => {
@@ -26,6 +28,7 @@ const runTasksInBatchesWithRetry = async (params, task) => {
     try {
       await task(paramsInChunks[i])
     } catch(e) {
+      console.log(e)
       if (tries) {
         console.log('  ** retrying **')
         i--
@@ -37,8 +40,11 @@ const runTasksInBatchesWithRetry = async (params, task) => {
   }
 }
 
+const hasJigsawApiSecret = () => !!process.env.JIGSAW_API_SECRET
+
 module.exports = {
   makeChunks,
   makeSequentialArray,
-  runTasksInBatchesWithRetry
+  runTasksInBatchesWithRetry,
+  hasJigsawApiSecret
 }

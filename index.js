@@ -12,53 +12,44 @@ const process = async () => {
 
   if (!utils.hasJigsawApiSecret) throw new Error('You need to provide a enviroment variable called JIGSAW_API_SECRET')
 
-  console.log()
-  console.log('JIGSAW-IMPORTER')
+  console.log('\nJIGSAW-IMPORTER')
   console.log('===============')
 
   try {
-    console.log()
-    console.log('## Updating DB schema')
+    console.log('\n## Updating DB schema')
     await knex.migrate.latest({directory: __dirname + '/migrations'})
 
-    console.log()
-    console.log('## Deleting old data')
+    console.log('\n## Deleting old data')
     await knex('people').truncate()
     await knex('skills').truncate()
 
-    console.log()
-    console.log('## Getting total number of people\'s pages')
+    console.log('\n## Getting total number of people\'s pages')
     const totalPeoplePages = await getPeople.getTotalPages()
     console.log('  - %s pages found', totalPeoplePages)
 
     const pages = utils.makeSequentialArray(totalPeoplePages)
 
-    console.log()
-    console.log('## Getting and inserting people')
+    console.log('\n## Getting and inserting people')
     await utils.runTasksInBatchesWithRetry(pages, async (pagesBatch) => {
       const people = await getPeople.getPeople(pagesBatch)
       await insertPeople.insertPeople(people)
     })
 
-    console.log()
-    console.log('## Getting all people\'s ids')
+    console.log('\n## Getting all people\'s ids')
     const ids = await getSkills.getAllIds()
     console.log('  - %s people found', ids.length)
 
-    console.log()
-    console.log('## Getting and inserting skills')
+    console.log('\n## Getting and inserting skills')
     await utils.runTasksInBatchesWithRetry(ids, async (idsBatch) => {
       const skills = await getSkills.getSkills(idsBatch)
       await insertSkills.insertSkills(skills)
     })
 
-    console.log()
-    console.log('## SUCCESS!')
+    console.log('\n## SUCCESS!')
   } catch(e) {
     if(tries) {
       tries--
-      console.log()
-      console.log('## Another try...')
+      console.log('\n## Another try...')
       process()
     } else {
       throw e

@@ -1,14 +1,10 @@
-#!/usr/bin/env node
 require('dotenv').config()
-const knex = require('./src/knex-connection')
 const getPeople = require('./src/get-people')
-const insertPeople = require('./src/insert-people')
 const getSkills = require('./src/get-skills')
-const insertSkills = require('./src/insert-skills')
 const utils = require('./src/utils')
 let tries = 3
 
-const process = async () => {
+const process = async (insertPeople, getIds, insertSkills) => {
 
   if (!utils.hasJigsawApiSecret) throw new Error('You need to provide a enviroment variable called JIGSAW_API_SECRET')
 
@@ -16,13 +12,6 @@ const process = async () => {
   console.log('===============')
 
   try {
-    console.log('\n## Updating DB schema')
-    await knex.migrate.latest({directory: __dirname + '/migrations'})
-
-    console.log('\n## Deleting old data')
-    await knex('people').truncate()
-    await knex('skills').truncate()
-
     console.log('\n## Getting total number of people\'s pages')
     const totalPeoplePages = await getPeople.getTotalPages()
     console.log('  - %s pages found', totalPeoplePages)
@@ -32,17 +21,17 @@ const process = async () => {
     console.log('\n## Getting and inserting people')
     await utils.runTasksInBatchesWithRetry(pages, async (pagesBatch) => {
       const people = await getPeople.getPeople(pagesBatch)
-      await insertPeople.insertPeople(people)
+      await insertPeople(people)
     })
 
     console.log('\n## Getting all people\'s ids')
-    const ids = await getSkills.getAllIds()
+    const ids = await getIds() 
     console.log('  - %s people found', ids.length)
 
     console.log('\n## Getting and inserting skills')
     await utils.runTasksInBatchesWithRetry(ids, async (idsBatch) => {
       const skills = await getSkills.getSkills(idsBatch)
-      await insertSkills.insertSkills(skills)
+      await insertSkills(skills)
     })
 
     console.log('\n## SUCCESS!')
@@ -50,11 +39,11 @@ const process = async () => {
     if(tries) {
       tries--
       console.log('\n## Another try...')
-      process()
+      process(insertPeople, getIds, insertSkills)
     } else {
       throw e
     }
   }
 }
 
-process()
+module.exports = process

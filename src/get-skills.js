@@ -1,11 +1,4 @@
-const knex = require('./knex-connection')
 const axios = require('axios')
-
-const getAllIds = async () => {
-  const employeeIdsFromDB = await knex.select('employeeId').from('people')
-  return employeeIdsFromDB
-    .reduce((accumulator, current) => accumulator = accumulator.concat(current.employeeId), [])
-}
 
 const getPersonSkills = async (id) => {
   const response = await axios({
@@ -29,7 +22,6 @@ const getSkills = async (ids) => {
 }
 
 module.exports = {
-  getAllIds,
   getPersonSkills,
   getSkills
 }

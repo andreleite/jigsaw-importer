@@ -2,48 +2,52 @@ require('dotenv').config()
 const getPeople = require('./src/get-people')
 const getSkills = require('./src/get-skills')
 const utils = require('./src/utils')
-let tries = 3
 
-const process = async (insertPeople, getIds, insertSkills) => {
+function fetchAndInsert(name, fetcher) {
+  return async function(params, inserter) {
+    console.log('  - %s found', params.length)
+
+    console.log(`\n## Getting and inserting ${name}`)
+    await utils.runTasksInBatchesWithRetry(params, async (batch) => {
+      const data = await fetcher(batch)
+      await inserter(data)
+    })
+  }
+}
+
+const process = async (action, data, inserter) => {
+  let tries = 3
 
   if (!utils.hasJigsawApiSecret) throw new Error('You need to provide a enviroment variable called JIGSAW_API_SECRET')
 
-  console.log('\nJIGSAW-IMPORTER')
-  console.log('===============')
-
   try {
-    console.log('\n## Getting total number of people\'s pages')
-    const totalPeoplePages = await getPeople.getTotalPages()
-    console.log('  - %s pages found', totalPeoplePages)
+    await action(data, inserter)
 
-    const pages = utils.makeSequentialArray(totalPeoplePages)
-
-    console.log('\n## Getting and inserting people')
-    await utils.runTasksInBatchesWithRetry(pages, async (pagesBatch) => {
-      const people = await getPeople.getPeople(pagesBatch)
-      await insertPeople(people)
-    })
-
-    console.log('\n## Getting all people\'s ids')
-    const ids = await getIds() 
-    console.log('  - %s people found', ids.length)
-
-    console.log('\n## Getting and inserting skills')
-    await utils.runTasksInBatchesWithRetry(ids, async (idsBatch) => {
-      const skills = await getSkills.getSkills(idsBatch)
-      await insertSkills(skills)
-    })
-
-    console.log('\n## SUCCESS!')
+    console.log('\n## Skills inserted to database!')
   } catch(e) {
     if(tries) {
       tries--
       console.log('\n## Another try...')
-      process(insertPeople, getIds, insertSkills)
+      await process(data, inserter)
     } else {
       throw e
     }
   }
 }
 
-module.exports = process
+const fetchSkillsAndInsert = async (insertSkills, ids) => {
+  await process(fetchAndInsert('skills', getSkills.getSkills), ids, insertSkills)
+}
+
+const fetchPeopleAndInsert = async (insertPeople) => {
+  console.log('\n## Getting total number of people\'s pages')
+  const totalPeoplePages = await getPeople.getTotalPages()
+  const peoplePages = utils.makeSequentialArray(totalPeoplePages)
+
+  await process(fetchAndInsert('people', getPeople.getPeople), peoplePages, insertPeople)
+}
+
+module.exports = {
+  fetchPeopleAndInsert,
+  fetchSkillsAndInsert
+}

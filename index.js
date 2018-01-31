@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 require('dotenv').config()
 const getPeople = require('./src/get-people')
 const getSkills = require('./src/get-skills')

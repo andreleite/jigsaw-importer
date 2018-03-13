@@ -11,10 +11,20 @@ const {
   person,
   personSkillsFromJigsaw,
   personSkillsProcessed,
-  peopleHeaders
+  peopleHeaders,
+  personProjectFromJigsaw,
+  unorderedPersonProjectFromJigsaw,
+  personOnTheBeachFromJigsaw,
+  personProjectProcessed,
+  personOnTheBeach
 } = require('./fixtures')
 global.person = person
 global.person2 = { ...person, employeeId: person.employeeId++ }, 
 global.personSkillsFromJigsaw = personSkillsFromJigsaw
 global.personSkillsProcessed = personSkillsProcessed
+global.personProjectFromJigsaw = personProjectFromJigsaw
+global.unorderedPersonProjectFromJigsaw = unorderedPersonProjectFromJigsaw
+global.personOnTheBeachFromJigsaw = personOnTheBeachFromJigsaw
+global.personProjectProcessed = personProjectProcessed
+global.personOnTheBeach = personOnTheBeach
 global.peopleHeaders = peopleHeaders

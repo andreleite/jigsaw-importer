@@ -1,4 +1,5 @@
 const axios = require('axios')
+const getProject = require('./get-project')
 
 const getTotalPages = async () => {
   const people = await axios({
@@ -19,7 +20,13 @@ const getPeoplePage = async (page) => {
     baseURL: 'https://jigsaw.thoughtworks.net/api',
     headers: {'Authorization': process.env.JIGSAW_API_SECRET}
   })
-  return people.data
+
+  return await Promise.all(people.data.map((person) => {
+    return getProject.getPersonProject(person.employeeId).then((response) => {
+      person.project = response.project
+      return person
+    })
+  }))
 }
 
 const getPeople = async (pages) => {

@@ -9,6 +9,7 @@ chai.use(sinonChai)
 global.expect = require('chai').expect
 const {
   person,
+  expectedPerson,
   personSkillsFromJigsaw,
   personSkillsProcessed,
   peopleHeaders,
@@ -19,6 +20,7 @@ const {
   personOnTheBeach
 } = require('./fixtures')
 global.person = person
+global.expectedPerson = expectedPerson
 global.person2 = { ...person, employeeId: person.employeeId++ }, 
 global.personSkillsFromJigsaw = personSkillsFromJigsaw
 global.personSkillsProcessed = personSkillsProcessed

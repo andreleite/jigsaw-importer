@@ -31,7 +31,7 @@ getLastWorkExperience = (response) => {
 }
 
 getProjectName = (workExperience) => {
-  if(personIsOnTheBeach(workExperience)){
+  if(workExperience === undefined || personIsOnTheBeach(workExperience)){
     return "On The Beach"
   }
   return workExperience.project.name;

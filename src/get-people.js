@@ -21,7 +21,30 @@ const getPeoplePage = async (page) => {
     headers: {'Authorization': process.env.JIGSAW_API_SECRET}
   })
 
-  return await Promise.all(people.data.map((person) => {
+  return await fetchProjectsSequentially(people.data) 
+}
+
+const fetchProjectsSequentially = (people) => {
+  peoplePages = createPaginatedArray(people, 10)
+  promise = Promise.resolve([])
+  peoplePages.forEach((page) => {
+    promise = promise.then((people) => {
+      return fetchProjects(page).then((updatedPage) => people.concat(updatedPage))
+    })
+  })
+  return promise
+}
+
+const createPaginatedArray = (array, pageSize) => {
+    var pages = [], i;
+    for (i = 0; i < array.length; i += pageSize) {
+        pages.push(array.slice(i, i + pageSize));
+    }
+    return pages;
+}
+
+const fetchProjects = (people) => {
+  return Promise.all(people.map((person) => {
     return getProject.getPersonProject(person.employeeId).then((response) => {
       person.project = response.project
       return person

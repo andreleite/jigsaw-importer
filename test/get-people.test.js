@@ -2,6 +2,24 @@ const getPeople = require('../src/get-people')
 const getProject = require('../src/get-project')
 const sinon = require('sinon')
 
+const TWENTY_PEOPLE = [
+  person, person, person, person, person,
+  person, person, person, person, person,
+  person, person, person, person, person,
+  person, person, person, person, person
+]
+
+const TWENTY_EXPECTED_PEOPLE = [
+  expectedPerson, expectedPerson, expectedPerson, expectedPerson,
+  expectedPerson, expectedPerson, expectedPerson, expectedPerson,
+  expectedPerson, expectedPerson, expectedPerson, expectedPerson,
+  expectedPerson, expectedPerson, expectedPerson, expectedPerson,
+  expectedPerson, expectedPerson, expectedPerson, expectedPerson
+]
+
+const FORTY_EXPECTED_PEOPLE = TWENTY_EXPECTED_PEOPLE
+  .concat(TWENTY_EXPECTED_PEOPLE)
+
 describe('getPeople', () => {
   before(() => {
     sinon
@@ -24,7 +42,7 @@ describe('getPeople', () => {
     person.employeeId = "666"
     mock
       .onGet('/people')
-      .reply(() => [200, [person, person], peopleHeaders])
+      .reply(() => [200, TWENTY_PEOPLE, peopleHeaders])
   })
 
   it('getTotalPages', async () => {
@@ -34,11 +52,11 @@ describe('getPeople', () => {
 
   it('getPeoplePage', async () => {
     const peoplePage = await getPeople.getPeoplePage(1)
-    expect(peoplePage).to.deep.equal([expectedPerson, expectedPerson])
+    expect(peoplePage).to.deep.equal(TWENTY_EXPECTED_PEOPLE)
   })
 
   it('getPeople', async function () {
     const people = await getPeople.getPeople([1, 2])
-    expect(people).to.deep.equal([expectedPerson, expectedPerson, expectedPerson, expectedPerson])
+    expect(people).to.deep.equal(FORTY_EXPECTED_PEOPLE)
   })
 })

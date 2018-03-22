@@ -168,7 +168,7 @@ module.exports = {
   ],
   personProjectProcessed: {
     "employeeId": "666",
-    "project": "Reconstrução do Grande Banco"
+    "project": "Inovação no Grande Restaurante"
   },
   personOnTheBeach: {
     "employeeId": "667",

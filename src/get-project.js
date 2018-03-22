@@ -27,7 +27,7 @@ getLastWorkExperience = (response) => {
       return 1
     return 0
   }
-  return response.data.sort(workExperienceComparator)[0]
+  return response.data.sort(workExperienceComparator)[response.data.length - 1]
 }
 
 getProjectName = (workExperience) => {

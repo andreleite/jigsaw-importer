@@ -25,7 +25,7 @@ const getPeoplePage = async (page) => {
 }
 
 const fetchProjectsSequentially = (people) => {
-  peoplePages = createPaginatedArray(people, 10)
+  peoplePages = createPaginatedArray(people, 1)
   promise = Promise.resolve([])
   peoplePages.forEach((page) => {
     promise = promise.then((people) => {
@@ -46,6 +46,7 @@ const createPaginatedArray = (array, pageSize) => {
 const fetchProjects = (people) => {
   return Promise.all(people.map((person) => {
     return getProject.getPersonProject(person.employeeId).then((response) => {
+      console.log("Person Id #" + person.employeeId + " work experience retrieved.")
       person.project = response.project
       return person
     })
